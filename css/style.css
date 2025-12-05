@@ -9700,3 +9700,57 @@ h3 {
     margin-bottom: 15px;
     font-size: 18px;
 }    
+
+
+    /* Container for stacked icons */
+    .icon-stack {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        display: flex;
+        flex-direction: column;
+         align-items: center;     /* <-- CENTER BOTH */
+        gap: 8px; /* space between year + github */
+        z-index: 9999;
+    }
+
+    /* Year badge */
+    .year-badge {
+        background: rgba(0,0,0,0.6);
+        padding: 6px 12px;
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* GitHub icon under year */
+    .github-icon {
+        font-size: 35px;
+        color: white;
+        transition: transform 0.25s ease;
+        cursor: pointer;
+    }
+
+    .github-icon:hover {
+        transform: scale(1.15);
+        color:#002752;
+    }
+
+    /* Zoom card */
+    .col-md-4 {
+        overflow: hidden;
+    }
+
+    .project {
+        transition: transform 0.35s ease-in-out;
+    }
+
+    .project:hover {
+        transform: scale(1.07);
+    }
+
