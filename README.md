@@ -1,4 +1,4 @@
 # basuruyasaruwan
 
 this is my portfolio website
-visit :- https://basuru07.github.io/basuruyasaruwan.github.io/
+visit :- https://basuru07.github.io/
