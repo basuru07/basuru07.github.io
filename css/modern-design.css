@@ -1,0 +1,355 @@
+/* Modern Premium Design System */
+:root {
+    --bg-dark: #0a0a0c;
+    --bg-card: rgba(20, 20, 24, 0.8);
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.5);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --font-main: 'Inter', sans-serif;
+    --font-heading: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    font-family: var(--font-main) !important;
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-heading) !important;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+/* Fix for Resume Nav Links visibility */
+#navi ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+#navi li a {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    font-size: 1.1rem;
+    padding: 10px 0;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+#navi li a.current,
+#navi li a:hover {
+    color: var(--accent) !important;
+    padding-left: 10px;
+}
+
+/* Fix for Resume Nav Links visibility */
+#navi li a.current:after {
+    display: none !important;
+}
+
+#navi li a.current::before {
+    content: "— ";
+    color: var(--accent);
+}
+
+/* Glassmorphism Utility */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--accent-glow);
+    transform: translateY(-5px);
+}
+
+/* Navigation Overhaul */
+.ftco_navbar {
+    background: transparent !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.ftco_navbar.scrolled {
+    background: rgba(10, 10, 12, 0.8) !important;
+    padding: 0.5rem 0;
+}
+
+.navbar-brand {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    font-size: 1.5rem !important;
+    color: var(--text-primary) !important;
+}
+
+.navbar-brand span {
+    color: white !important;
+    /* Better contrast in the blue circle */
+    background: var(--accent);
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem !important;
+    transition: color 0.3s ease;
+}
+
+.nav-link:hover,
+.nav-item.active .nav-link {
+    color: var(--accent) !important;
+}
+
+/* Hero Section */
+.hero-wrap {
+    position: relative;
+    background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+}
+
+.hero-wrap .text h1 {
+    font-size: 4rem;
+    letter-spacing: -2px;
+    margin-bottom: 1rem;
+}
+
+.hero-wrap .text h2 {
+    font-size: 1.8rem;
+    color: var(--text-secondary);
+}
+
+.hero-wrap .text .subheading {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Skills Grid */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem;
+    padding: 1rem 0;
+}
+
+.skill-item {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 0.8rem 0.4rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.skill-item:hover {
+    border-color: var(--accent);
+    background: rgba(59, 130, 246, 0.05);
+    transform: scale(1.05);
+}
+
+.skill-item img {
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.2));
+    margin-bottom: 0.75rem;
+}
+
+.skill-item span {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* Resume Section */
+.resume-wrap {
+    background: var(--glass-bg) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 12px;
+    padding: 1.2rem !important;
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.resume-wrap:hover {
+    border-color: var(--accent) !important;
+}
+
+.resume-wrap .date {
+    color: var(--accent) !important;
+    font-weight: 700;
+}
+
+.resume-wrap h2 {
+    color: white !important;
+    font-size: 1.5rem !important;
+    margin-bottom: 5px !important;
+}
+
+.resume-wrap .position {
+    color: var(--text-secondary) !important;
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.resume-wrap p,
+.resume-wrap li {
+    color: var(--text-secondary) !important;
+}
+
+/* Projects Overhaul */
+.project {
+    border-radius: 30px;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 3/2;
+    height: auto !important;
+    margin-bottom: 30px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--bg-card);
+}
+
+.project .overlay {
+    background: linear-gradient(to top, rgba(10, 10, 12, 0.9) 0%, transparent 100%) !important;
+    opacity: 1 !important;
+}
+
+.project .text {
+    opacity: 1 !important;
+    bottom: 20px !important;
+    padding: 2rem !important;
+}
+
+.project .text h3 a {
+    color: var(--text-primary) !important;
+    font-weight: 700;
+}
+
+.project .badge {
+    background: rgba(59, 130, 246, 0.2) !important;
+    color: var(--accent) !important;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 6px 12px !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+}
+
+/* Footer Reduction (User Request) */
+.ftco-footer {
+    padding: 3em 0 !important;
+    /* Reduced from 7em */
+    background: var(--bg-dark) !important;
+    border-top: 1px solid var(--glass-border);
+}
+
+.ftco-footer .ftco-footer-widget h2 {
+    font-size: 18px !important;
+    /* Reduced size */
+    margin-bottom: 20px !important;
+}
+
+.ftco-footer p,
+.ftco-footer li,
+.ftco-footer a {
+    font-size: 14px !important;
+    /* Reduced font size */
+    color: var(--text-secondary) !important;
+}
+
+.ftco-footer-social li a {
+    width: 40px !important;
+    /* Reduced size */
+    height: 40px !important;
+    line-height: 40px !important;
+}
+
+.ftco-footer-social li a span {
+    font-size: 20px !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Typing animation cursor color */
+.txt-rotate>.wrap {
+    border-right: 0.08em solid var(--accent) !important;
+}
+
+/* Ensure all project badges are readable */
+.project .badge {
+    color: white !important;
+    background: var(--accent) !important;
+    opacity: 1 !important;
+}
+
+/* Fix for section headers */
+.heading-section h2 {
+    color: white !important;
+}
+
+.heading-section .big {
+    color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Contact Section Corner Fix */
+.contact-section .box {
+    border-radius: 30px !important;
+}
+
+/* Remove white diamond background from scroll indicator */
+.mouse-icon:after {
+    display: none !important;
+}
+
+.mouse-wheel span {
+    color: var(--accent) !important;
+    font-size: 30px;
+}
