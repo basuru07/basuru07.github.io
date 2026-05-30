@@ -438,5 +438,105 @@ $(function() {
 
   }
 
+  // Projects Horizontal Scroll Controller
+  var initProjectsScroll = function() {
+    var $container = $('.projects-scroll-container');
+    var $btnPrev = $('.projects-nav-btn.prev');
+    var $btnNext = $('.projects-nav-btn.next');
+    var $progressBar = $('.projects-progress-bar');
+    
+    if ($container.length === 0) return;
+    
+    var updateScrollControls = function() {
+      var scrollLeft = $container.scrollLeft();
+      var maxScrollLeft = $container[0].scrollWidth - $container[0].clientWidth;
+      
+      // Update button disabled state
+      if (scrollLeft <= 5) {
+        $btnPrev.addClass('disabled');
+      } else {
+        $btnPrev.removeClass('disabled');
+      }
+      
+      if (scrollLeft >= maxScrollLeft - 5) {
+        $btnNext.addClass('disabled');
+      } else {
+        $btnNext.removeClass('disabled');
+      }
+      
+      // Update progress bar
+      var progressPercent = maxScrollLeft > 0 ? (scrollLeft / maxScrollLeft) * 100 : 0;
+      $progressBar.css('width', progressPercent + '%');
+    };
+    
+    // Initial call
+    setTimeout(updateScrollControls, 100);
+    
+    // Scroll event
+    $container.on('scroll', updateScrollControls);
+    
+    // Button clicks
+    $btnPrev.on('click', function(e) {
+      e.preventDefault();
+      var scrollAmount = $container.outerWidth() * 0.75;
+      $container.stop().animate({
+        scrollLeft: $container.scrollLeft() - scrollAmount
+      }, 400);
+    });
+    
+    $btnNext.on('click', function(e) {
+      e.preventDefault();
+      var scrollAmount = $container.outerWidth() * 0.75;
+      $container.stop().animate({
+        scrollLeft: $container.scrollLeft() + scrollAmount
+      }, 400);
+    });
+    
+    // Drag-to-scroll support for Desktop mouse drag
+    var isDown = false;
+    var startX;
+    var scrollLeftVal;
+    
+    $container.on('mousedown', function(e) {
+      // Only drag with left mouse button
+      if (e.which !== 1) return;
+      isDown = true;
+      $container.addClass('active');
+      startX = e.pageX - $container.offset().left;
+      scrollLeftVal = $container.scrollLeft();
+      $container.css('cursor', 'grabbing');
+    });
+    
+    $(document).on('mouseup.projectsDrag', function() {
+      if (!isDown) return;
+      isDown = false;
+      $container.removeClass('active');
+      $container.css('cursor', 'grab');
+    });
+    
+    $container.on('mouseleave', function() {
+      if (!isDown) return;
+      isDown = false;
+      $container.removeClass('active');
+      $container.css('cursor', 'grab');
+    });
+    
+    $container.on('mousemove', function(e) {
+      if(!isDown) return;
+      e.preventDefault();
+      var x = e.pageX - $container.offset().left;
+      var walk = (x - startX) * 1.5; // multiplier for scroll speed
+      $container.scrollLeft(scrollLeftVal - walk);
+    });
+    
+    // Set grab cursor
+    $container.css('cursor', 'grab');
+    
+    // Recalculate on window resize
+    $(window).on('resize', updateScrollControls);
+  };
+
+  initProjectsScroll();
+
 });
 
