@@ -1,31 +1,33 @@
-# Portfolio Website
-Welcome to my portfolio website! This is a showcase of my projects, skills, and professional experience.
+# basuru07.github.io
 
-## 🌐 Live Site
-Visit my portfolio: [https://basuru07.github.io/](https://basuru07.github.io/)
+Personal portfolio of **Basuru Yasaruwan**, Systems Engineer.
 
-## 📋 About
-This repository contains the source code for my personal portfolio website built with HTML, CSS, JavaScript, and SCSS.
+Live: [https://basuru07.github.io/](https://basuru07.github.io/)
 
-## 🗂️ Project Structure
-- **HTML** - Website structure and markup
-- **CSS & SCSS** - Styling and responsive design
-- **JavaScript** - Interactive functionality
-- **Images** - Project thumbnails and assets
-- **Fonts** - Custom fonts for typography
+## Stack
 
-## ✨ Features
-- Responsive design for all devices
-- Portfolio showcase with project details
-- Clean and modern UI
-- Interactive elements
+Plain HTML, CSS and vanilla JavaScript. No build step, no frameworks.
 
-## 📧 Contact
-Feel free to reach out to me through the contact section on my website or visit my GitHub profile.
+- `index.html`: all page content
+- `css/main.css`: styles, with light and dark themes defined as CSS variables
+- `js/main.js`: theme toggle, mobile menu, active-section highlighting, scroll reveals, project filters, copy-email
+- `images/`: portrait, project screenshots and article covers
 
-## 📄 License
-This project is open source and available under the MIT License.
+## Editing content
 
----
+Everything lives in `index.html`, one `<section>` per area (About, Experience, Projects, Skills, Awards, Writing, Contact).
 
-*Last updated: 2024*
+- **New project:** copy an `<article class="project">` block and set `data-cat` to one or more of `devops web mobile ai`.
+- **New article:** copy an `<a class="post card">` block in the Writing section.
+
+## Running locally
+
+Open `index.html` in a browser, or serve the folder:
+
+```bash
+python -m http.server 8000
+```
+
+## License
+
+MIT

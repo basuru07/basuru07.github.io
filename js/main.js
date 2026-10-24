@@ -1,542 +1,239 @@
- AOS.init({
- 	duration: 800,
- 	easing: 'slide'
- });
+(function () {
+	'use strict';
 
-(function($) {
+	var root = document.documentElement;
+	root.classList.add('js');
 
-	"use strict";
+	// ----- Theme toggle -----
+	var themeBtn = document.getElementById('theme-toggle');
 
-	$(window).stellar({
-    responsive: true,
-    parallaxBackgrounds: true,
-    parallaxElements: true,
-    horizontalScrolling: false,
-    hideDistantElements: false,
-    scrollProperty: 'scroll'
-  });
-
-
-	var fullHeight = function() {
-
-		$('.js-fullheight').css('height', $(window).height());
-		$(window).resize(function(){
-			$('.js-fullheight').css('height', $(window).height());
-		});
-
-	};
-	fullHeight();
-
-	// loader
-	var loader = function() {
-		setTimeout(function() { 
-			if($('#ftco-loader').length > 0) {
-				$('#ftco-loader').removeClass('show');
-			}
-		}, 1);
-	};
-	loader();
-
-	// Scrollax
-   $.Scrollax();
-
-
-
-   // Burger Menu
-	var burgerMenu = function() {
-
-		$('body').on('click', '.js-fh5co-nav-toggle', function(event){
-
-			event.preventDefault();
-
-			if ( $('#ftco-nav').is(':visible') ) {
-				$(this).removeClass('active');
-			} else {
-				$(this).addClass('active');	
-			}
-
-			
-			
-		});
-
-	};
-	burgerMenu();
-
-
-	var onePageClick = function() {
-
-
-		$(document).on('click', '#ftco-nav a[href^="#"]', function (event) {
-	    event.preventDefault();
-
-	    var href = $.attr(this, 'href');
-
-	    $('html, body').animate({
-	        scrollTop: $($.attr(this, 'href')).offset().top - 70
-	    }, 500, function() {
-	    	// window.location.hash = href;
-	    });
-		});
-
-	};
-
-	onePageClick();
-	
-
-	var carousel = function() {
-		$('.home-slider').owlCarousel({
-	    loop:true,
-	    autoplay: true,
-	    margin:0,
-	    animateOut: 'fadeOut',
-	    animateIn: 'fadeIn',
-	    nav:false,
-	    autoplayHoverPause: false,
-	    items: 1,
-	    navText : ["<span class='ion-md-arrow-back'></span>","<span class='ion-chevron-right'></span>"],
-	    responsive:{
-	      0:{
-	        items:1
-	      },
-	      600:{
-	        items:1
-	      },
-	      1000:{
-	        items:1
-	      }
-	    }
-		});
-	};
-	carousel();
-
-	$('nav .dropdown').hover(function(){
-		var $this = $(this);
-		// 	 timer;
-		// clearTimeout(timer);
-		$this.addClass('show');
-		$this.find('> a').attr('aria-expanded', true);
-		// $this.find('.dropdown-menu').addClass('animated-fast fadeInUp show');
-		$this.find('.dropdown-menu').addClass('show');
-	}, function(){
-		var $this = $(this);
-			// timer;
-		// timer = setTimeout(function(){
-			$this.removeClass('show');
-			$this.find('> a').attr('aria-expanded', false);
-			// $this.find('.dropdown-menu').removeClass('animated-fast fadeInUp show');
-			$this.find('.dropdown-menu').removeClass('show');
-		// }, 100);
-	});
-
-
-	$('#dropdown04').on('show.bs.dropdown', function () {
-	  console.log('show');
-	});
-
-	// scroll
-	var scrollWindow = function() {
-		$(window).scroll(function(){
-			var $w = $(this),
-					st = $w.scrollTop(),
-					navbar = $('.ftco_navbar'),
-					sd = $('.js-scroll-wrap');
-
-			if (st > 150) {
-				if ( !navbar.hasClass('scrolled') ) {
-					navbar.addClass('scrolled');	
-				}
-			} 
-			if (st < 150) {
-				if ( navbar.hasClass('scrolled') ) {
-					navbar.removeClass('scrolled sleep');
-				}
-			} 
-			if ( st > 350 ) {
-				if ( !navbar.hasClass('awake') ) {
-					navbar.addClass('awake');	
-				}
-				
-				if(sd.length > 0) {
-					sd.addClass('sleep');
-				}
-			}
-			if ( st < 350 ) {
-				if ( navbar.hasClass('awake') ) {
-					navbar.removeClass('awake');
-					navbar.addClass('sleep');
-				}
-				if(sd.length > 0) {
-					sd.removeClass('sleep');
-				}
-			}
-		});
-	};
-	scrollWindow();
-
-	
-
-	var counter = function() {
-		
-		$('#section-counter, .hero-wrap, .ftco-counter, .ftco-about').waypoint( function( direction ) {
-
-			if( direction === 'down' && !$(this.element).hasClass('ftco-animated') ) {
-
-				var comma_separator_number_step = $.animateNumber.numberStepFactories.separator(',')
-				$('.number').each(function(){
-					var $this = $(this),
-						num = $this.data('number');
-						console.log(num);
-					$this.animateNumber(
-					  {
-					    number: num,
-					    numberStep: comma_separator_number_step
-					  }, 7000
-					);
-				});
-				
-			}
-
-		} , { offset: '95%' } );
-
+	function currentTheme() {
+		var set = root.getAttribute('data-theme');
+		if (set) return set;
+		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 	}
-	counter();
 
+	themeBtn.addEventListener('click', function () {
+		var next = currentTheme() === 'dark' ? 'light' : 'dark';
+		root.setAttribute('data-theme', next);
+		try { localStorage.setItem('theme', next); } catch (e) { }
+	});
 
-	var contentWayPoint = function() {
-		var i = 0;
-		$('.ftco-animate').waypoint( function( direction ) {
+	// ----- Nav: scrolled state + mobile menu -----
+	var nav = document.getElementById('nav');
+	var menuBtn = document.getElementById('menu-toggle');
+	var links = document.getElementById('nav-links');
 
-			if( direction === 'down' && !$(this.element).hasClass('ftco-animated') ) {
-				
-				i++;
+	function onScroll() {
+		nav.classList.toggle('is-scrolled', window.scrollY > 10);
+	}
+	window.addEventListener('scroll', onScroll, { passive: true });
+	onScroll();
 
-				$(this.element).addClass('item-animate');
-				setTimeout(function(){
+	function setMenu(open) {
+		links.classList.toggle('is-open', open);
+		nav.classList.toggle('menu-open', open);
+		menuBtn.setAttribute('aria-expanded', String(open));
+		menuBtn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+	}
 
-					$('body .ftco-animate.item-animate').each(function(k){
-						var el = $(this);
-						setTimeout( function () {
-							var effect = el.data('animate-effect');
-							if ( effect === 'fadeIn') {
-								el.addClass('fadeIn ftco-animated');
-							} else if ( effect === 'fadeInLeft') {
-								el.addClass('fadeInLeft ftco-animated');
-							} else if ( effect === 'fadeInRight') {
-								el.addClass('fadeInRight ftco-animated');
-							} else {
-								el.addClass('fadeInUp ftco-animated');
-							}
-							el.removeClass('item-animate');
-						},  k * 50, 'easeInOutExpo' );
-					});
-					
-				}, 100);
-				
-			}
+	menuBtn.addEventListener('click', function () {
+		setMenu(!links.classList.contains('is-open'));
+	});
 
-		} , { offset: '95%' } );
-	};
-	contentWayPoint();
+	links.addEventListener('click', function (e) {
+		if (e.target.closest('a')) setMenu(false);
+	});
 
-	// magnific popup
-	$('.image-popup').magnificPopup({
-    type: 'image',
-    closeOnContentClick: true,
-    closeBtnInside: false,
-    fixedContentPos: true,
-    mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
-     gallery: {
-      enabled: true,
-      navigateByImgClick: true,
-      preload: [0,1] // Will preload 0 - before current, and 1 after the current image
-    },
-    image: {
-      verticalFit: true
-    },
-    zoom: {
-      enabled: true,
-      duration: 300 // don't foget to change the duration also in CSS
-    }
-  });
+	document.addEventListener('keydown', function (e) {
+		if (e.key === 'Escape') setMenu(false);
+	});
 
-  $('.popup-youtube, .popup-vimeo, .popup-gmaps').magnificPopup({
-    disableOn: 700,
-    type: 'iframe',
-    mainClass: 'mfp-fade',
-    removalDelay: 160,
-    preloader: false,
+	// ----- Active section highlighting -----
+	var navLinks = Array.prototype.slice.call(links.querySelectorAll('a'));
+	var sections = navLinks
+		.map(function (a) { return document.querySelector(a.getAttribute('href')); })
+		.filter(Boolean);
 
-    fixedContentPos: false
-  });
+	if ('IntersectionObserver' in window) {
+		var spy = new IntersectionObserver(function (entries) {
+			entries.forEach(function (entry) {
+				if (!entry.isIntersecting) return;
+				navLinks.forEach(function (a) {
+					a.classList.toggle('is-active', a.getAttribute('href') === '#' + entry.target.id);
+				});
+			});
+		}, { rootMargin: '-45% 0px -50% 0px' });
+		sections.forEach(function (s) { spy.observe(s); });
 
+		// ----- Reveal on scroll -----
+		var revealer = new IntersectionObserver(function (entries) {
+			entries.forEach(function (entry) {
+				if (entry.isIntersecting) {
+					entry.target.classList.add('is-visible');
+					revealer.unobserve(entry.target);
+				}
+			});
+		}, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
 
-  var goHere = function() {
+		document.querySelectorAll('.reveal').forEach(function (el) { revealer.observe(el); });
+	} else {
+		document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+	}
 
-		$('.mouse-icon').on('click', function(event){
-			
-			event.preventDefault();
+	// ----- Project filters -----
+	var filters = document.querySelectorAll('.filter');
+	var projects = document.querySelectorAll('.project');
 
-			$('html,body').animate({
-				scrollTop: $('.goto-here').offset().top
-			}, 500, 'easeInOutExpo');
-			
-			return false;
+	filters.forEach(function (btn) {
+		btn.addEventListener('click', function () {
+			var f = btn.getAttribute('data-filter');
+			filters.forEach(function (b) { b.classList.toggle('is-active', b === btn); });
+			projects.forEach(function (p) {
+				var cats = p.getAttribute('data-cat').split(' ');
+				var show = f === 'all' || cats.indexOf(f) !== -1;
+				p.classList.toggle('is-hidden', !show);
+				if (show) p.classList.add('is-visible');
+			});
 		});
+	});
+
+	// ----- Copy email -----
+	var toast = document.getElementById('toast');
+	var toastTimer;
+
+	function showToast(msg) {
+		toast.textContent = msg;
+		toast.classList.add('is-visible');
+		clearTimeout(toastTimer);
+		toastTimer = setTimeout(function () { toast.classList.remove('is-visible'); }, 2200);
+	}
+
+	var copyBtn = document.getElementById('copy-email');
+	copyBtn.addEventListener('click', function () {
+		var email = copyBtn.getAttribute('data-email');
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(email).then(
+				function () { showToast('Email copied to clipboard'); },
+				function () { showToast(email); }
+			);
+		} else {
+			showToast(email);
+		}
+	});
+
+	// ----- Local time in Colombo -----
+	var timeEl = document.getElementById('local-time');
+
+	function tick() {
+		try {
+			timeEl.textContent = new Date().toLocaleTimeString('en-GB', {
+				hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Colombo'
+			});
+		} catch (e) { }
+	}
+	tick();
+	setInterval(tick, 30000);
+
+	// ----- Contact terminal -----
+	var EMAIL = 'yasaruwanbasuruofficial@gmail.com';
+	var channels = {
+		email: { label: EMAIL, url: 'mailto:' + EMAIL },
+		linkedin: { label: 'linkedin.com/in/basuru-yasaruwan', url: 'https://www.linkedin.com/in/basuru-yasaruwan-805820235/' },
+		github: { label: 'github.com/basuru07', url: 'https://github.com/basuru07' },
+		medium: { label: 'medium.com/@FlutBack', url: 'https://medium.com/@FlutBack' },
+		instagram: { label: 'instagram.com/basuruu', url: 'https://www.instagram.com/basuruu/' }
 	};
-	goHere();
 
-	// $("#myScrollspy").scrollspy({ offset: -75 });
+	var termForm = document.getElementById('term-form');
+	var termInput = document.getElementById('term-cmd');
+	var termLog = document.getElementById('term-log');
+	var termBody = document.getElementById('term-body');
+	var history = [];
+	var histPos = 0;
 
+	function line(text, cls) {
+		var p = document.createElement('p');
+		if (cls) p.className = cls;
+		p.textContent = text;
+		termLog.appendChild(p);
+		return p;
+	}
 
+	function linkLine(prefix, ch) {
+		var p = line(prefix, 'out');
+		var a = document.createElement('a');
+		a.href = ch.url;
+		a.textContent = ch.label;
+		if (ch.url.indexOf('http') === 0) { a.target = '_blank'; a.rel = 'noopener'; }
+		p.appendChild(a);
+	}
 
-var TxtRotate = function(el, toRotate, period) {
-  this.toRotate = toRotate;
-  this.el = el;
-  this.loopNum = 0;
-  this.period = parseInt(period, 10) || 2000;
-  this.txt = '';
-  this.tick();
-  this.isDeleting = false;
-};
+	function copyEmail() {
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			return navigator.clipboard.writeText(EMAIL).then(
+				function () { showToast('Email copied to clipboard'); return true; },
+				function () { return false; }
+			);
+		}
+		return Promise.resolve(false);
+	}
 
-TxtRotate.prototype.tick = function() {
-  var i = this.loopNum % this.toRotate.length;
-  var fullTxt = this.toRotate[i];
+	function run(raw) {
+		var cmd = raw.trim().toLowerCase().replace(/^(open|cat|\.\/)\s*/, '');
+		var echo = line('', '');
+		echo.innerHTML = '<span class="prompt">$</span> ';
+		echo.appendChild(document.createTextNode(raw));
 
-  if (this.isDeleting) {
-    this.txt = fullTxt.substring(0, this.txt.length - 1);
-  } else {
-    this.txt = fullTxt.substring(0, this.txt.length + 1);
-  }
+		if (!cmd) return;
 
-  this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
+		if (cmd === 'help' || cmd === 'ls') {
+			line('channels: ' + Object.keys(channels).join(', '), 'out');
+			line('also: whoami, copy, hire, clear', 'out');
+		} else if (cmd === 'clear') {
+			termLog.innerHTML = '';
+		} else if (cmd === 'whoami') {
+			line('Basuru Yasaruwan, Associate Systems Engineer at Zone24x7', 'out');
+		} else if (cmd === 'copy' || cmd === 'copy email') {
+			copyEmail().then(function (ok) {
+				line(ok ? 'copied ' + EMAIL + ' to clipboard' : EMAIL, 'out');
+			});
+		} else if (cmd === 'hire' || cmd === 'sudo hire') {
+			linkLine('great choice. start here: ', channels.email);
+		} else if (channels[cmd]) {
+			linkLine('connecting to ' + cmd + '... ', channels[cmd]);
+			window.open(channels[cmd].url, cmd === 'email' ? '_self' : '_blank', 'noopener');
+		} else {
+			line('command not found: ' + cmd + '. Try help', 'out');
+		}
+		termBody.scrollTop = termBody.scrollHeight;
+	}
 
-  var that = this;
-  var delta = 300 - Math.random() * 100;
+	termForm.addEventListener('submit', function (e) {
+		e.preventDefault();
+		var v = termInput.value;
+		if (v.trim()) { history.push(v); }
+		histPos = history.length;
+		termInput.value = '';
+		run(v);
+	});
 
-  if (this.isDeleting) { delta /= 2; }
+	termInput.addEventListener('keydown', function (e) {
+		if (e.key === 'ArrowUp' && histPos > 0) {
+			histPos--;
+			termInput.value = history[histPos];
+			e.preventDefault();
+		} else if (e.key === 'ArrowDown' && histPos < history.length) {
+			histPos++;
+			termInput.value = history[histPos] || '';
+			e.preventDefault();
+		} else if (e.key === 'Tab' && termInput.value) {
+			var all = Object.keys(channels).concat(['help', 'whoami', 'copy', 'hire', 'clear']);
+			var match = all.filter(function (c) { return c.indexOf(termInput.value.toLowerCase()) === 0; });
+			if (match.length === 1) { termInput.value = match[0]; e.preventDefault(); }
+		}
+	});
 
-  if (!this.isDeleting && this.txt === fullTxt) {
-    delta = this.period;
-    this.isDeleting = true;
-  } else if (this.isDeleting && this.txt === '') {
-    this.isDeleting = false;
-    this.loopNum++;
-    delta = 500;
-  }
-
-  setTimeout(function() {
-    that.tick();
-  }, delta);
-};
-
-window.onload = function() {
-  var elements = document.getElementsByClassName('txt-rotate');
-  for (var i=0; i<elements.length; i++) {
-    var toRotate = elements[i].getAttribute('data-rotate');
-    var period = elements[i].getAttribute('data-period');
-    if (toRotate) {
-      new TxtRotate(elements[i], JSON.parse(toRotate), period);
-    }
-  }
-  // INJECT CSS
-  var css = document.createElement("style");
-  css.type = "text/css";
-  css.innerHTML = ".txt-rotate > .wrap { border-right: 0.08em solid #666 }";
-  document.body.appendChild(css);
-};
-
-
-})(jQuery);
-
-
-
-
-
-
-
-// this makes the height of each page equal to the height of the window
-// $('.page').css('height', $( window ).height());
-
-// scrollspy section
-(function($){
-  //variable that will hold the href attr of the links in the menu
-  var sections = [];
-  //variable that stores the id of the section
-  var id = false;
-  //variable for the selection of the anchors in the navbar
-  var $navbara = $('#navi a');
-  
-  $navbara.click(function(e){
-    //prevent the page from refreshing
-    e.preventDefault();
-    //set the top offset animation and speed
-    $('html, body').animate({
-      scrollTop: $($(this).attr('href')).offset().top - 180
-},500);
-    hash($(this).attr('href'));
-  });
-  
-  
-  
-  //select all the anchors in the navbar one after another
-  $navbara.each(function(){
-   // and adds them in the sections variable
-    sections.push($($(this).attr('href')));
-    
-  })
-  $(window).scroll(function(e){
-    // scrollTop retains the value of the scroll top with the reference at the middle of the page
-    var scrollTop = $(this).scrollTop() + ($(window).height()/2);
-    //cycle through the values in sections array
-    for (var i in sections) {
-      var section = sections[i];
-      //if scrollTop variable is bigger than the top offset of a section in the sections array then 
-      if (scrollTop > section.offset().top){
-        var scrolled_id = section.attr('id');
-      }
-    }
-    if (scrolled_id !== id) {
-      id = scrolled_id;
-      $($navbara).removeClass('current');
-      $('#navi a[href="#' + id + '"]').addClass('current'); 
-    }
-  })
-})(jQuery);
-
-hash = function(h){
-  if (history.pushState){
-    history.pushState(null, null, h);
-  }else{
-    location.hash = h;
-  }
-}
-
-
-$(function() {
-
-  $(".progress").each(function() {
-
-    var value = $(this).attr('data-value');
-    var left = $(this).find('.progress-left .progress-bar');
-    var right = $(this).find('.progress-right .progress-bar');
-
-    if (value > 0) {
-      if (value <= 50) {
-        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
-      } else {
-        right.css('transform', 'rotate(180deg)')
-        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
-      }
-    }
-
-  })
-
-  function percentageToDegrees(percentage) {
-
-    return percentage / 100 * 360
-
-  }
-
-  // Projects Horizontal Scroll Controller
-  var initProjectsScroll = function() {
-    var $container = $('.projects-scroll-container');
-    var $btnPrev = $('.projects-nav-btn.prev');
-    var $btnNext = $('.projects-nav-btn.next');
-    var $progressBar = $('.projects-progress-bar');
-    
-    if ($container.length === 0) return;
-    
-    var updateScrollControls = function() {
-      var scrollLeft = $container.scrollLeft();
-      var maxScrollLeft = $container[0].scrollWidth - $container[0].clientWidth;
-      
-      // Update button disabled state
-      if (scrollLeft <= 5) {
-        $btnPrev.addClass('disabled');
-      } else {
-        $btnPrev.removeClass('disabled');
-      }
-      
-      if (scrollLeft >= maxScrollLeft - 5) {
-        $btnNext.addClass('disabled');
-      } else {
-        $btnNext.removeClass('disabled');
-      }
-      
-      // Update progress bar
-      var progressPercent = maxScrollLeft > 0 ? (scrollLeft / maxScrollLeft) * 100 : 0;
-      $progressBar.css('width', progressPercent + '%');
-    };
-    
-    // Initial call
-    setTimeout(updateScrollControls, 100);
-    
-    // Scroll event
-    $container.on('scroll', updateScrollControls);
-    
-    // Button clicks
-    $btnPrev.on('click', function(e) {
-      e.preventDefault();
-      var scrollAmount = $container.outerWidth() * 0.75;
-      $container.stop().animate({
-        scrollLeft: $container.scrollLeft() - scrollAmount
-      }, 400);
-    });
-    
-    $btnNext.on('click', function(e) {
-      e.preventDefault();
-      var scrollAmount = $container.outerWidth() * 0.75;
-      $container.stop().animate({
-        scrollLeft: $container.scrollLeft() + scrollAmount
-      }, 400);
-    });
-    
-    // Drag-to-scroll support for Desktop mouse drag
-    var isDown = false;
-    var startX;
-    var scrollLeftVal;
-    
-    $container.on('mousedown', function(e) {
-      // Only drag with left mouse button
-      if (e.which !== 1) return;
-      isDown = true;
-      $container.addClass('active');
-      startX = e.pageX - $container.offset().left;
-      scrollLeftVal = $container.scrollLeft();
-      $container.css('cursor', 'grabbing');
-    });
-    
-    $(document).on('mouseup.projectsDrag', function() {
-      if (!isDown) return;
-      isDown = false;
-      $container.removeClass('active');
-      $container.css('cursor', 'grab');
-    });
-    
-    $container.on('mouseleave', function() {
-      if (!isDown) return;
-      isDown = false;
-      $container.removeClass('active');
-      $container.css('cursor', 'grab');
-    });
-    
-    $container.on('mousemove', function(e) {
-      if(!isDown) return;
-      e.preventDefault();
-      var x = e.pageX - $container.offset().left;
-      var walk = (x - startX) * 1.5; // multiplier for scroll speed
-      $container.scrollLeft(scrollLeftVal - walk);
-    });
-    
-    // Set grab cursor
-    $container.css('cursor', 'grab');
-    
-    // Recalculate on window resize
-    $(window).on('resize', updateScrollControls);
-  };
-
-  initProjectsScroll();
-
-});
-
+	// ----- Footer year -----
+	document.getElementById('year').textContent = new Date().getFullYear();
+})();
